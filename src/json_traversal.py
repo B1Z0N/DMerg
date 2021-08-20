@@ -3,18 +3,23 @@ from data_source import CsvDataSource
 import json
 
 data_source_map = {
-    'csv' : CsvDataSource
+    'csv' : lambda: CsvDataSource(input('Provide path to csv file: '))
 }
 
-def recreate(dct, merge=True):
+def recreate(dct, merge_arrays=True, update_all=True):
     result = {}
     for k, v in dct.items():
         if type(v) is list:
-            data_source = get_data_source(v)
-            data = data_source.generate()
-            if merge: user_merge(v, data)
+            if update_all or input(f'Should we update {k}?(y/n)').lower() == 'y':
+                data_source = get_data_source(v)
+                data = data_source.generate()
+                result[k] = merge_sources(v, data) if merge_arrays else transform_source(v)
+            else:
+                result[k] = v
+        elif type(v) is dict:
+            result[k] = recreate(v, merge_arrays)
         else:
-            pass
+            result[k] = v
 
 def get_data_source(key, arr):
     allsources, source = list(data_source_map.keys()), None
@@ -25,7 +30,10 @@ def get_data_source(key, arr):
             print(f'"{source}" is not among data sources options, try again.')
             source = None
 
-    return data_source_map[source](arr)
+    return data_source_map[source]()
 
-def user_merge(initial_arr, upcoming_arr):
+def merge_sources(initial_arr, upcoming_arr):
+    pass
+
+def transform_source(upcoming_arr):
     pass
