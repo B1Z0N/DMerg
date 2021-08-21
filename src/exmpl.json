@@ -1,0 +1,18 @@
+{
+    "DataSource": {
+        "type": "csv",
+        "choices": {
+            "path": "/home/b1z0n/Programming/DMerg/use/comp_curves.csv",
+            "separator": ";"
+        }
+    },
+    "DataDestination": {
+        "type": "json",
+        "choices": {
+            "path": "/home/b1z0n/Programming/DMerg/use/02_comp_curves.json",
+            "to_update": ["CompositeCurves"]
+        }
+    }
+
+    // and something for code
+}
