@@ -1,7 +1,7 @@
 {
-    "@Type": "BayernLB.Events.BlbCompositeCurvesEventData",
-    "Action": "New",
-    "AsOfDate": "2021-06-30",
+    "key1": "val1",
+    "key2": "val2",
+    "key3": "val3",
     "CompositeCurves": [
         {
             "CurveId": "Curve2",
