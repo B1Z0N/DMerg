@@ -29,7 +29,7 @@ class CsvDataSource(DataSource):
     def generate(self) -> Iterable[dict]:
         with open(self.fpath) as f:
             headings = f.readline()[:-1].split(self.sep)
-            for line in f.readlines()[1:]:
+            for line in f.readlines():
                 yield {k: v for k, v in zip(headings, line[:-1].split(self.sep))}
 
 
@@ -40,7 +40,7 @@ class CsvDataSource(DataSource):
 
 class DataProcess(ABC):
     @staticmethod
-    def run(obj: DataProcess) -> dict:
+    def run(obj) -> dict:
         with open('config.json') as f:
             obj.config = json.loads(f.read())
             dest_type, dest_choices = obj.config['data_dest']['type'], obj.config['data_dest']['choices']
@@ -49,10 +49,10 @@ class DataProcess(ABC):
             return run_all_nodes(obj, obj.dest, obj.config['to_update'])
 
     def transform(self, key: str, src: Iterable) -> Iterable:
-        return self._merge(src, [])
+        return list(self._merge(key, src, []))
 
     def merge(self, key: str, src: Iterable, dest: Iterable) -> Iterable:
-        return self._merge(src, dest)
+        return list(self._merge(key, src, dest))
 
     @abstractmethod
     def _merge(self, key: str, src: Iterable, dest: Iterable) -> Iterable:
