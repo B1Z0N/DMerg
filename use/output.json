@@ -1,0 +1,39 @@
+{
+    "@Type": "BayernLB.Events.BlbCompositeCurvesEventData",
+    "Action": "New",
+    "AsOfDate": "2021-06-30",
+    "CompositeCurves": [
+        {
+            "CurveId": "Curve2",
+            "Currency": "EUR",
+            "NumeratorCurves": [
+                "NCurve3",
+                "NCurve4"
+            ],
+            "DenominatorCurves": [
+                ""
+            ]
+        },
+        {
+            "CurveId": "Curve3",
+            "Currency": "EUR",
+            "NumeratorCurves": [
+                "NCurve5",
+                "NCurve6"
+            ],
+            "DenominatorCurves": [
+                "DCurve1"
+            ]
+        },
+        {
+            "CurveId": "Curve4",
+            "Currency": "EUR",
+            "NumeratorCurves": [
+                "NCurve7"
+            ],
+            "DenominatorCurves": [
+                "DCurve2"
+            ]
+        }
+    ]
+}

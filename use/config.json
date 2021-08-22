@@ -2,7 +2,7 @@
     "data_dest": {
         "type": "json",
         "choices": {
-            "path": "/home/b1z0n/Programming/DMerg/use/02_comp_curves.json"
+            "path": "output.json"
         }
     },
     "to_update": {
@@ -10,7 +10,7 @@
             "data_source": {
                 "type": "csv",
                 "choices": {
-                    "path": "/home/b1z0n/Programming/DMerg/use/comp_curves.csv",
+                    "path": "input_CompositeCurves.csv",
                     "separator": ";"
                 }
             },
