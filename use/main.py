@@ -1,7 +1,9 @@
-from data import DataProcess
+from typing import Iterable
+from dmerg import DataProcess
+
 
 class CompCurvesDataProcess(DataProcess):
-    def _merge(self, src, dest):
+    def _merge(self, key: str, src: Iterable, dest: Iterable):
         res = list([{
             'CurveId': el['Curve'],
             'Currency': el['Ccy'],
@@ -10,6 +12,7 @@ class CompCurvesDataProcess(DataProcess):
         } for el in src])
 
         return res
+
 
 if __name__ == '__main__':
     print(DataProcess.run(CompCurvesDataProcess()))

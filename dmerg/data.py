@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from copy import copy
 
 import json
+from typing import Iterable
 
 
 ##################################################
@@ -16,17 +16,17 @@ class DataSource(ABC):
     }
 
     @abstractmethod
-    def generate(self):
+    def generate(self) -> Iterable[dict]:
         pass
 
 
 class CsvDataSource(DataSource):
 
-    def __init__(self, fpath, sep=','):
+    def __init__(self, fpath: str, sep: str = ','):
         self.fpath = fpath
         self.sep = sep
 
-    def generate(self):
+    def generate(self) -> Iterable[dict]:
         with open(self.fpath) as f:
             headings = f.readline()[:-1].split(self.sep)
             for line in f.readlines()[1:]:
@@ -40,22 +40,22 @@ class CsvDataSource(DataSource):
 
 class DataProcess(ABC):
     @staticmethod
-    def run(obj):
+    def run(obj: DataProcess) -> dict:
         with open('config.json') as f:
             obj.config = json.loads(f.read())
             dest_type, dest_choices = obj.config['data_dest']['type'], obj.config['data_dest']['choices']
             obj.dest = DataDestination.map[dest_type](dest_choices).to_dict()
-            
+
             return run_all_nodes(obj, obj.dest, obj.config['to_update'])
 
-    def transform(self, src):
+    def transform(self, key: str, src: Iterable) -> Iterable:
         return self._merge(src, [])
 
-    def merge(self, src, dest):
+    def merge(self, key: str, src: Iterable, dest: Iterable) -> Iterable:
         return self._merge(src, dest)
 
     @abstractmethod
-    def _merge(self, src, dest):
+    def _merge(self, key: str, src: Iterable, dest: Iterable) -> Iterable:
         pass
 
 
@@ -71,16 +71,17 @@ class DataDestination(ABC):
     }
 
     @abstractmethod
-    def to_dict(self):
+    def to_dict(self) -> dict:
         pass
+
 
 class JsonDataDestination(DataDestination):
 
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, fpath: str):
+        self.fpath = fpath
 
-    def to_dict(self):
-        with open(self.path) as f:
+    def to_dict(self) -> dict:
+        with open(self.fpath) as f:
             return json.loads(f.read())
 
 
@@ -91,20 +92,22 @@ class JsonDataDestination(DataDestination):
 
 def run_all_nodes(process: DataProcess, current_data: dict, to_update: dict):
     result = {}
-    
+
     for k, v in current_data.items():
         if type(v) is list:
             if (keyinfo := to_update.get(k)) is not None:
-                src_type, src_choices = keyinfo['data_source']['type'], keyinfo['data_source']['choices']
+                src_type, src_choices, merge = keyinfo['data_source'][
+                    'type'], keyinfo['data_source']['choices'], keyinfo['merge']
 
                 source = DataSource.map[src_type](src_choices)
                 data = source.generate()
-                result[k] = process.merge(data, v) if keyinfo['merge'] else process.transform(data)
+                result[k] = process.merge(
+                    k, data, v) if merge else process.transform(k, data)
             else:
                 result[k] = v
         elif type(v) is dict:
             result[k] = run_all_nodes(process, v, to_update)
         else:
             result[k] = v
-    
+
     return result
