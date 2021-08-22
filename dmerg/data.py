@@ -96,8 +96,7 @@ def run_all_nodes(process: DataProcess, current_data: dict, to_update: dict):
     for k, v in current_data.items():
         if type(v) is list:
             if (keyinfo := to_update.get(k)) is not None:
-                src_type, src_choices, merge = keyinfo['data_source'][
-                    'type'], keyinfo['data_source']['choices'], keyinfo['merge']
+                src_type, src_choices, merge = keyinfo['data_source']['type'], keyinfo['data_source']['choices'], keyinfo['merge']
 
                 source = DataSource.map[src_type](src_choices)
                 data = source.generate()
