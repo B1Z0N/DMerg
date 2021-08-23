@@ -1,0 +1,4 @@
+Curve;Ccy;Numerator;Denominator
+Curve1;EUR;NCurve1,NCurve2;
+Curve2;EUR;NCurve3,NCurve4;
+Curve3;EUR;NCurve5,NCurve6;DCurve1

@@ -10,7 +10,7 @@
             "data_source": {
                 "type": "csv",
                 "choices": {
-                    "path": "input_CompositeCurves.csv",
+                    "path": "CompositeCurves_input.csv",
                     "separator": ";"
                 }
             },
